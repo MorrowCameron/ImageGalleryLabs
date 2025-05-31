@@ -1,16 +1,16 @@
-export interface IImageData {
+export interface IAPIImageData {
     id: string;
     src: string;
     name: string;
-    author: IUserData;
+    author: IAPIUserData;
 }
 
-export interface IUserData {
+export interface IAPIUserData {
     id: string,
     username: string
 }
 
-const IMAGES: IImageData[] = [
+const IMAGES: IAPIImageData[] = [
     {
         id: "0",
         src: "https://upload.wikimedia.org/wikipedia/commons/3/33/Blue_merle_koolie_short_coat_heading_sheep.jpg",

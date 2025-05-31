@@ -1,6 +1,6 @@
 import { ImageGrid } from "./ImageGrid.tsx";
-import type { IImageData } from "../MockAppData.ts";
-export function AllImages({ imageData }: { imageData: IImageData[] }) {
+import type { IAPIImageData } from "../../../backend/src/shared/MockAppData.ts";
+export function AllImages({ imageData }: { imageData: IAPIImageData[] }) {
     return (
         <>
             <h2>All Images</h2>
