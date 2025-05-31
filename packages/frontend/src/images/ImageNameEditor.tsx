@@ -1,42 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface INameEditorProps {
   initialValue: string;
   imageId: string;
-  onNameChange: (newName: string, imageId: string) => void;
+  onNameChange: (imageId: string, newName: string) => void;
 }
 
-export function ImageNameEditor(props: INameEditorProps) {
+export function ImageNameEditor({ initialValue, imageId, onNameChange }: INameEditorProps) {
   const [isEditingName, setIsEditingName] = useState(false);
-  const [input, setInput] = useState(props.initialValue);
+  const [input, setInput] = useState(initialValue);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setInput(props.initialValue);
-  }, [props.initialValue]);
-
-  async function handleSubmitPressed() {
+  const handleSubmitPressed = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`/api/images/${props.imageId}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch image data.");
+      const response = await fetch(`/api/images/${imageId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newName: input })
+      });
+
+      if (response.status === 204) {
+        // Update local state in App
+        onNameChange(imageId, input);
+        setIsEditingName(false);
+      } else {
+        // Parse error message
+        const errorData = await response.json();
+        setError(`${errorData.error}: ${errorData.message}`);
       }
-
-      props.onNameChange(input, props.imageId);
-
-      setIsEditingName(false);
-      setError(null);
     } catch (e) {
       console.error(e);
-      setError("An error occurred. Please try again.");
+      setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   if (isEditingName) {
     return (
@@ -45,14 +47,11 @@ export function ImageNameEditor(props: INameEditorProps) {
           New Name{" "}
           <input
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={e => setInput(e.target.value)}
             disabled={loading}
           />
         </label>
-        <button
-          disabled={input.length === 0 || loading}
-          onClick={handleSubmitPressed}
-        >
+        <button disabled={loading || input.length === 0} onClick={handleSubmitPressed}>
           Submit
         </button>
         <button onClick={() => setIsEditingName(false)} disabled={loading}>
@@ -62,11 +61,11 @@ export function ImageNameEditor(props: INameEditorProps) {
         {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
     );
-  } else {
-    return (
-      <div style={{ margin: "1em 0" }}>
-        <button onClick={() => setIsEditingName(true)}>Edit name</button>
-      </div>
-    );
   }
+
+  return (
+    <div style={{ margin: "1em 0" }}>
+      <button onClick={() => setIsEditingName(true)}>Edit name</button>
+    </div>
+  );
 }

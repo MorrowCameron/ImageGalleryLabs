@@ -4,10 +4,13 @@ import { ImageNameEditor } from "./ImageNameEditor.tsx";
 
 export function ImageDetails({ imageData, onNameChange }: { imageData: IAPIImageData[], onNameChange: (imageId: string, newName: string) => void }) {
     const { imageId } = useParams<{ imageId: string }>();
-    const image = imageData.find(image => image.id === imageId);
+    const image = imageData.find(image => String(image.id) === String(imageId));
+
     if (!image) {
-        return <><h2>Image not found</h2></>;
+      return <><h2>Image not found</h2></>;
     }
+
+    console.log("ImageDetails rendering for imageId:", imageId);
 
     return (
         <>

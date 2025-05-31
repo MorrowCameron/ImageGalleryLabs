@@ -5,7 +5,6 @@ import { UploadPage } from "./UploadPage.tsx";
 import { LoginPage } from "./LoginPage.tsx";
 import { MainLayout } from "./MainLayout.tsx";
 import { useEffect, useState } from "react";
-// import { fetchDataFromServer } from "../../backend/src/shared/MockAppData.ts";
 import { ValidRoutes } from "../../backend/src/shared/ValidRoutes.ts";
 import type { IAPIImageData } from "../../backend/src/shared/MockAppData.ts";
 
@@ -38,7 +37,7 @@ function App() {
     console.log(fetching);
     console.log(hasError);
 
-    const handleNameChange = (newName: string, imageId: string) => {
+    const handleNameChange = (imageId: string, newName: string) => {
         setImageData((prevData) =>
           prevData.map((image) =>
             image.id === imageId ? { ...image, name: newName } : image
