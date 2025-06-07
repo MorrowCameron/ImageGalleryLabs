@@ -1,6 +1,7 @@
 ### Get all images
 # This is a comment
 GET http://localhost:3000/api/images
+Authorization: Bearer <token string from /auth/login>
 
 ### A second example.  Each request must be delimited by a triple hash
 POST http://localhost:3000/api/test

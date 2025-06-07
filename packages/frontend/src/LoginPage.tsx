@@ -31,13 +31,13 @@ export function LoginPage({ isRegistering, setAuthToken }: LoginPageProps) {
             }
 
             const data = await response.json();
-            if (isRegistering) { // BEGIN: Handle successful registration
+            if (isRegistering) { 
                 setAuthToken(data.token); 
                 console.log("Authentication token:", data.token); 
-                navigate("/"); // Redirect to home after successful registration
+                navigate("/"); 
             } else {
-                setAuthToken(data.token); // Set auth token from callback
-                console.log("Authentication token:", data.token); // Log the auth token on successful login
+                setAuthToken(data.token); 
+                console.log("Authentication token:", data.token); 
             }
 
             console.log(isRegistering ? "Successfully created account" : "Successfully logged in"); 
