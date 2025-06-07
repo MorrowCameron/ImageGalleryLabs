@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import type { IAPIImageData } from "../../../backend/src/shared/MockAppData.ts";
 import { ImageNameEditor } from "./ImageNameEditor.tsx";
 
-export function ImageDetails({ imageData, onNameChange }: { imageData: IAPIImageData[], onNameChange: (imageId: string, newName: string) => void }) {
+export function ImageDetails({ imageData, onNameChange, authToken }: { imageData: IAPIImageData[], onNameChange: (imageId: string, newName: string) => void, authToken: string }) {
     const { imageId } = useParams<{ imageId: string }>();
     const image = imageData.find(image => String(image.id) === String(imageId));
 
@@ -16,7 +16,7 @@ export function ImageDetails({ imageData, onNameChange }: { imageData: IAPIImage
         <>
             <h2>{image.name}</h2>
             <p>By {image.author.username}</p>
-            {imageId && <ImageNameEditor initialValue={image.name} imageId={imageId} onNameChange={onNameChange}/>}
+            {imageId && <ImageNameEditor initialValue={image.name} imageId={imageId} onNameChange={onNameChange} authToken={authToken}/>}
             <img className="ImageDetails-img" src={image.src} alt={image.name} />
         </>
     )

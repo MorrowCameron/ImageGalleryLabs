@@ -4,9 +4,10 @@ interface INameEditorProps {
   initialValue: string;
   imageId: string;
   onNameChange: (imageId: string, newName: string) => void;
+  authToken: string;
 }
 
-export function ImageNameEditor({ initialValue, imageId, onNameChange }: INameEditorProps) {
+export function ImageNameEditor({ initialValue, imageId, onNameChange, authToken }: INameEditorProps) {
   const [isEditingName, setIsEditingName] = useState(false);
   const [input, setInput] = useState(initialValue);
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,9 @@ export function ImageNameEditor({ initialValue, imageId, onNameChange }: INameEd
     try {
       const response = await fetch(`/api/images/${imageId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+                    Authorization: `Bearer ${authToken}`,
+                   },
         body: JSON.stringify({ newName: input })
       });
 
