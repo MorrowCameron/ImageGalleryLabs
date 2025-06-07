@@ -21,3 +21,45 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3000/api/images/search?name=Huskies
+
+
+### New user registration
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{ "username": "newuser", "password": "password" }
+
+### Valid registration
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser1",
+  "password": "password"
+}
+
+### Missing fields (triggers 400)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "incomplete"
+}
+
+### Username already taken (triggers 409)
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser1",
+  "password": "password"
+}
+
+### Test JWT Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "username": "testuser1",
+  "password": "password"
+}

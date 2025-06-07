@@ -2,7 +2,7 @@ import { Collection, MongoClient, ObjectId } from "mongodb";
 import type { IAPIImageData } from "./shared/MockAppData";
 
 interface IImageDocument {
-  _id: string;
+  _id?: ObjectId | string; // Allow both ObjectId and string for compatibility
   name: string;
   src: string;
   authorId: string;
@@ -34,7 +34,7 @@ export class ImageProvider {
         $lookup: {
           from: "users",
           localField: "authorId",
-          foreignField: "_id",
+          foreignField: "username",
           as: "author"
         }
       },
@@ -69,9 +69,22 @@ export class ImageProvider {
 
   async updateImageName(imageId: string, newName: string): Promise<number> {
     const result = await this.collection.updateOne(
-      { _id: new ObjectId(imageId) as unknown as string },
+      { _id: new ObjectId(imageId)},
       { $set: { name: newName } }
     );
     return result.matchedCount;
+  }
+
+  async getImageAuthorId(imageId: string): Promise<string | null> {
+    const image = await this.collection.findOne({ _id: new ObjectId(imageId) }, { projection: { authorId: 1 } });
+    return image?.authorId ?? null;
+  }
+
+  async createImage(image: { name: string; src: string; author: string }) {
+    return await this.collection.insertOne({
+      name: image.name,
+      src: image.src,
+      authorId: image.author
+    });
   }
 }
